@@ -1,3 +1,4 @@
+
 namespace MT.Blog.Common.Functional.Optional;
 
 public abstract class Option<T> 
