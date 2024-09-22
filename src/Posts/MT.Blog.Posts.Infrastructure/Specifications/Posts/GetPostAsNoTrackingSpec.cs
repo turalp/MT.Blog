@@ -16,5 +16,7 @@ public sealed class GetPostAsNoTrackingSpec : SingleResultSpecification<Post>, I
             .Include(p => p.CreatedBy);
     
     public static GetPostAsNoTrackingSpec TryCreate(PostId postId) 
-        => postId.Value > 1 ? new(postId) : throw new ArgumentException("Primary key must be greater than zero."); 
+        => postId.Value > 1 ? 
+            new(postId) : 
+            throw new ArgumentException("Primary key must be greater than zero.", nameof(postId)); 
 }

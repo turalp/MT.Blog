@@ -13,5 +13,7 @@ public sealed class GetPostsByParentSpec : Specification<Post>, ISpecification<P
             .Where(p => p.ParentPostId == parentPostId);
 
     public static GetPostsByParentSpec TryCreate(PostId parentPostId) 
-        => parentPostId.Value > 1 ? new(parentPostId) : throw new ArgumentException("Primary key must be greater than zero.");
+        => parentPostId.Value > 1 ? 
+            new(parentPostId) : 
+            throw new ArgumentException("Primary key must be greater than zero.", nameof(parentPostId));
 }

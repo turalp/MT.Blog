@@ -1,0 +1,33 @@
+﻿@page "/post/{Id:int}"
+
+@using MT.Blog.Common.Functional
+@using MT.Blog.Common.Functional.Optional
+@using MT.Blog.Posts.Application.Posts.Queries
+@using MT.Blog.Posts.Domain.Entities
+@using MT.Blog.Posts.Domain.Primaries
+@using MT.Blog.Common.Extensions
+
+@inject ISender _sender
+
+@if (Post.PostId != Post.Empty.PostId)
+{
+    <h3>@Post.Title</h3>
+    <p>@Post.Description</p>
+}
+else 
+{
+    <h3>Not Found.</h3>
+}
+
+@code {
+    public Post Post { get; set; } = Post.Empty;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var post = await _sender.Send<Result<Post>>(GetPostDetailsQuery.TryCreate(PostId.Create(Id)));
+        Post = post.Value.Map(p => p).Reduce(Post.Empty);
+    }
+}

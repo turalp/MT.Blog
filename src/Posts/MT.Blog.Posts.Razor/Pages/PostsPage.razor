@@ -1,0 +1,34 @@
+﻿@page "/posts/{ParentPostId: int}"
+
+@using MT.Blog.Common.Extensions
+@using MT.Blog.Common.Functional
+@using MT.Blog.Common.Functional.Optional
+@using MT.Blog.Posts.Application.Posts.Queries
+@using MT.Blog.Posts.Domain.Entities
+@using MT.Blog.Posts.Domain.Primaries
+
+@inject ISender _sender
+
+@if (Posts.Length != 0)
+{
+    
+}
+else 
+{
+    <h3>No child posts were found.</h3>
+}
+
+@code {
+    [Parameter]
+    public int? ParentPostId { get; set; }
+
+    public Post[] Posts { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        Result<IEnumerable<Post>> posts = await _sender.Send(GetPostsQuery.Create(ParentPostId.HasValue ? 
+            PostId.Create(ParentPostId.Value) : 
+            None.Of<PostId>()));
+        Posts = posts.IsSuccess ? posts.Value.Map(p => p.ToArray()).Reduce([]) : [];
+    }
+}

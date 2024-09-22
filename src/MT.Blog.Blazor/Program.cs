@@ -1,7 +1,9 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using MT.Blog.Posts.Razor;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.RegisterPostModule();
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 

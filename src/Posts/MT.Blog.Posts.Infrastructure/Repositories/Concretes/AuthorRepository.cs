@@ -12,7 +12,7 @@ using MT.Blog.Posts.Infrastructure.Repositories.Contracts;
 
 namespace MT.Blog.Posts.Infrastructure.Repositories.Concretes;
 
-internal sealed class AuthorRepository(PostDbContext dbContext) : IAuthorRepository
+public sealed class AuthorRepository(PostDbContext dbContext) : IAuthorRepository
 {
     private readonly PostDbContext _dbContext = dbContext;
 
