@@ -14,6 +14,4 @@ public abstract class Auditable : IEntity
     public DateTime? UpdatedAt { get; init; }
 
     public Author? Creator { get; init; }
-
-    public Author? Updator { get; init; }
 }

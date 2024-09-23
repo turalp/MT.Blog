@@ -16,6 +16,15 @@ public sealed class Comment : Auditable
         Post = post;
     }
 
+    [SetsRequiredMembers]
+    private Comment(string body, PostId postId) 
+    {
+        Body = body;
+        PostId = postId;
+        SubComments = [];
+        Post = Post.Empty;
+    }
+
     public CommentId CommentId { get; init; }
 
     public required string Body { get; init; }

@@ -13,6 +13,13 @@ public sealed class Tag : Auditable
         Posts = posts ?? [];
     }
 
+    [SetsRequiredMembers]
+    private Tag(string name)
+    {
+        Name = name;
+        Posts = [];
+    }
+
     public TagId TagId { get; init; }
 
     public required string Name { get; init; }

@@ -31,12 +31,6 @@ public sealed class TagConfiguration : AuditableConfiguration<Tag>, IEntityTypeC
             .HasForeignKey(p => p.CreatedBy)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(p => p.Updator)
-            .WithMany(p => p.Tags)
-            .IsRequired(false)
-            .HasForeignKey(p => p.UpdatedBy)
-            .OnDelete(DeleteBehavior.SetNull);
-
         base.Configure(builder);
     }
 }

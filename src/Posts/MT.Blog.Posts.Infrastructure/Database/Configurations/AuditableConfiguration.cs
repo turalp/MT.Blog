@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MT.Blog.Common.Converters;
 using MT.Blog.Posts.Domain.Entities.Base;
+using MT.Blog.Posts.Domain.Primaries;
 
 namespace MT.Blog.Posts.Infrastructure.Database.Configurations;
 
@@ -10,10 +12,12 @@ public class AuditableConfiguration<T> : IEntityTypeConfiguration<T> where T : A
     {
         builder
             .Property(p => p.CreatedBy)
+            .HasConversion<StronglyTypedIdConverter<AuthorId>>()
             .IsRequired();
 
         builder
             .Property(p => p.UpdatedBy)
+            .HasConversion<StronglyTypedIdConverter<AuthorId>>()
             .IsRequired(false);
 
         builder

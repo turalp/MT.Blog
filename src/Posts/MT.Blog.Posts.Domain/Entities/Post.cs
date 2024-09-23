@@ -23,6 +23,20 @@ public sealed class Post : Auditable
         SubPosts = subPosts ?? [];
     }
 
+    [SetsRequiredMembers]
+    private Post(
+        string title, 
+        string description, 
+        PostId? parentPostId = null)
+    {
+        Title = title;
+        Description = description;
+        ParentPostId = parentPostId;
+        Tags = [];
+        Comments = [];
+        SubPosts = [];
+    }
+
     public PostId PostId { get; init; }
 
     public required string Title { get; init; }

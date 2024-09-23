@@ -21,6 +21,18 @@ public sealed class Author : Auditable
         Tags = tags ?? [];
     }
 
+    [SetsRequiredMembers]
+    private Author(
+        string firstName, 
+        string lastName)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Posts = [];
+        Comments = [];
+        Tags = [];
+    }
+
     public AuthorId AuthorId { get; init; }
 
     public required string FirstName { get; init; }

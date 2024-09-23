@@ -29,25 +29,19 @@ public sealed class PostConfiguration : AuditableConfiguration<Post>, IEntityTyp
             .WithOne(p => p.Post)
             .HasForeignKey(p => p.PostId)
             .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasMany(p => p.SubPosts)
             .WithOne(p => p.ParentPost)
             .HasForeignKey(p => p.ParentPostId)
             .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(p => p.Creator)
             .WithMany(p => p.Posts)
             .IsRequired()
             .HasForeignKey(p => p.CreatedBy)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne(p => p.Updator)
-            .WithMany(p => p.Posts)
-            .IsRequired(false)
-            .HasForeignKey(p => p.UpdatedBy)
-            .OnDelete(DeleteBehavior.SetNull);
 
         base.Configure(builder);
     }

@@ -19,32 +19,26 @@ public sealed class CommentConfiguration : AuditableConfiguration<Comment>, IEnt
 
         builder.Property(p => p.Body)
             .IsRequired()
-            .HasMaxLength(4096)
+            .HasMaxLength(4000)
             .HasColumnType("nvarchar");
 
         builder.HasOne(p => p.Parent)
             .WithMany(p => p.SubComments)
             .IsRequired(false)
             .HasForeignKey(p => p.ParentId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(p => p.Post)
             .WithMany(p => p.Comments)
             .IsRequired()
             .HasForeignKey(p => p.PostId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(p => p.Creator)
             .WithMany(p => p.Comments)
             .IsRequired()
             .HasForeignKey(p => p.CreatedBy)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne(p => p.Updator)
-            .WithMany(p => p.Comments)
-            .IsRequired(false)
-            .HasForeignKey(p => p.UpdatedBy)
-            .OnDelete(DeleteBehavior.SetNull);
 
         base.Configure(builder);
     }
