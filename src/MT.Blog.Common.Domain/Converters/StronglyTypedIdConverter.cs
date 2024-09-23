@@ -9,4 +9,7 @@ public sealed class StronglyTypedIdConverter<T>(ConverterMappingHints? mappingHi
         value => StronglyTypedLambda<T>.Create(value),
         mappingHints) where T : struct, IStronglyTypedId<T>
 {
+    public StronglyTypedIdConverter() : this(null)
+    {
+    }
 }

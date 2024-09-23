@@ -2,7 +2,7 @@ using MT.Blog.Posts.Razor;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.RegisterPostModule();
+builder.Services.RegisterPostModule(builder.Configuration);
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
