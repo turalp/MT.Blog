@@ -1,4 +1,5 @@
 using MT.Blog.Posts.Razor;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,8 @@ builder.Services.RegisterPostModule(builder.Configuration);
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 

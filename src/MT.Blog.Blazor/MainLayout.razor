@@ -1,3 +1,14 @@
 ﻿@inherits LayoutComponentBase
 
-<main> @Body </main>
+<MudThemeProvider></MudThemeProvider>
+<MudPopoverProvider></MudPopoverProvider>
+<MudDialogProvider></MudDialogProvider>
+<MudSnackbarProvider></MudSnackbarProvider>
+
+<MudLayout Class="page-layout">
+    <Navbar></Navbar>
+    <MudMainContent Class="content">
+        @Body
+    </MudMainContent>
+    <Footer></Footer>
+</MudLayout>

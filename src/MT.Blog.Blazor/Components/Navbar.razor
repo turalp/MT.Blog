@@ -1,0 +1,45 @@
+﻿<MudAppBar Style="@($"background:{Colors.Green.Darken1};")" Fixed="true" Dense="true">
+    <MudHidden Breakpoint="Breakpoint.MdAndDown">
+        <MudImage Src="images/icon.ico" Height="64" Width="64"></MudImage>
+    </MudHidden>
+
+    <MudHidden Breakpoint="Breakpoint.LgAndUp">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" OnClick="ToggleDrawer" />
+    </MudHidden>
+
+    <MudHidden Breakpoint="Breakpoint.MdAndDown">
+        <MudButton Href="/" StartIcon="@Icons.Material.Filled.Home" Color="Color.Inherit">Baş səhifə</MudButton>
+        <MudButton Href="/posts" StartIcon="@Icons.Material.Filled.Article" Color="Color.Inherit">Məqalələr</MudButton>
+        <MudButton Href="/contact" StartIcon="@Icons.Material.Filled.ContactPage" Color="Color.Inherit">Əlaqə</MudButton>
+        <MudButton Href="/donation" StartIcon="@Icons.Material.Filled.AttachMoney" Color="Color.Inherit">Dəstək</MudButton>
+        <MudButton Href="/about" StartIcon="@Icons.Material.Filled.Info" Color="Color.Inherit">Haqqımızda</MudButton>
+        <MudSpacer />
+        <MudIconButton Href="/bookmarked" Icon="@Icons.Material.Filled.Bookmark" Color="Color.Inherit" />
+    </MudHidden>
+</MudAppBar>
+
+<MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Left" Elevation="0">
+    <MudNavMenu>
+        <MudGrid Justify="Justify.Center">
+            <MudItem>
+                <MudImage Src="images/icon.ico" Height="64" Width="64"></MudImage>
+            </MudItem>
+        </MudGrid>
+        <MudDivider />
+        <MudNavLink Href="/" Icon="@Icons.Material.Filled.Home">Baş səhifə</MudNavLink>
+        <MudNavLink Href="/about" Icon="@Icons.Material.Filled.Article">Məqalələr</MudNavLink>
+        <MudNavLink Href="/contact" Icon="@Icons.Material.Filled.ContactPage">Əlaqə</MudNavLink>
+        <MudNavLink Href="/donation" Icon="@Icons.Material.Filled.AttachMoney">Dəstək</MudNavLink>
+        <MudNavLink Href="/about" Icon="@Icons.Material.Filled.Info">Haqqımızda</MudNavLink>
+        <MudNavLink Href="/bookmarked" Icon="@Icons.Material.Filled.Bookmark">Əlfəcin</MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
+
+@code {
+    private bool _drawerOpen = false;
+
+    private void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

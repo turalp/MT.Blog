@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MT.Blog.Common.Constants;
 using MT.Blog.Common.Converters;
+using MT.Blog.Posts.Application;
 using MT.Blog.Posts.Domain.Options;
 using MT.Blog.Posts.Infrastructure.Database;
 using MT.Blog.Posts.Infrastructure.Repositories.Concretes;
@@ -25,7 +26,7 @@ public static class PostModule
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IAuthorRepository, AuthorRepository>();
         
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(PostModule).Assembly));
+        services.RegisterPostApplication();
 
         return services;
     }
