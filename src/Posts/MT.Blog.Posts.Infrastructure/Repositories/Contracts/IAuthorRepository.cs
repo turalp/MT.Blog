@@ -8,7 +8,7 @@ namespace MT.Blog.Posts.Infrastructure.Repositories.Contracts;
 
 public interface IAuthorRepository
 {
-    Task<Author> CreateAsync(Author post, CancellationToken cancellationToken = default);
+    Task<Author> CreateAsync(Author author, CancellationToken cancellationToken = default);
 
     Task<Result<Author>> UpdateAsync(Author author, CancellationToken cancellationToken = default);
 

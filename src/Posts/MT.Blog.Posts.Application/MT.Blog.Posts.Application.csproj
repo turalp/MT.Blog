@@ -15,4 +15,8 @@
     <ProjectReference Include="..\MT.Blog.Posts.Infrastructure\MT.Blog.Posts.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Categories\Commands\" />
+  </ItemGroup>
+
 </Project>

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MT.Blog.Posts.Infrastructure.Migrations
 {
     [DbContext(typeof(PostDbContext))]
-    [Migration("20240923053751_InitialMigration")]
+    [Migration("20240925185246_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -74,6 +74,58 @@ namespace MT.Blog.Posts.Infrastructure.Migrations
                         .HasDatabaseName("ix_authors_creator_author_id");
 
                     b.ToTable("authors", "posts");
+                });
+
+            modelBuilder.Entity("MT.Blog.Posts.Domain.Entities.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("category_id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int")
+                        .HasColumnName("created_by");
+
+                    b.Property<int?>("CreatorAuthorId")
+                        .HasColumnType("int")
+                        .HasColumnName("creator_author_id");
+
+                    b.Property<string>("IconUrl")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("varchar")
+                        .HasColumnName("icon_url");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("varchar")
+                        .HasColumnName("name");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("updated_at");
+
+                    b.Property<int?>("UpdatedBy")
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("int")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("CategoryId")
+                        .HasName("pk_category");
+
+                    b.HasIndex("CreatorAuthorId")
+                        .HasDatabaseName("ix_category_creator_author_id");
+
+                    b.ToTable("category", "posts");
                 });
 
             modelBuilder.Entity("MT.Blog.Posts.Domain.Entities.Comment", b =>
@@ -141,6 +193,10 @@ namespace MT.Blog.Posts.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PostId"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("category_id");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -176,6 +232,9 @@ namespace MT.Blog.Posts.Infrastructure.Migrations
 
                     b.HasKey("PostId")
                         .HasName("pk_posts");
+
+                    b.HasIndex("CategoryId")
+                        .HasDatabaseName("ix_posts_category_id");
 
                     b.HasIndex("CreatedBy")
                         .HasDatabaseName("ix_posts_created_by");
@@ -257,6 +316,16 @@ namespace MT.Blog.Posts.Infrastructure.Migrations
                     b.Navigation("Creator");
                 });
 
+            modelBuilder.Entity("MT.Blog.Posts.Domain.Entities.Category", b =>
+                {
+                    b.HasOne("MT.Blog.Posts.Domain.Entities.Author", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorAuthorId")
+                        .HasConstraintName("fk_category_authors_creator_author_id");
+
+                    b.Navigation("Creator");
+                });
+
             modelBuilder.Entity("MT.Blog.Posts.Domain.Entities.Comment", b =>
                 {
                     b.HasOne("MT.Blog.Posts.Domain.Entities.Author", "Creator")
@@ -288,6 +357,13 @@ namespace MT.Blog.Posts.Infrastructure.Migrations
 
             modelBuilder.Entity("MT.Blog.Posts.Domain.Entities.Post", b =>
                 {
+                    b.HasOne("MT.Blog.Posts.Domain.Entities.Category", "Category")
+                        .WithMany("Posts")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_posts_category_category_id");
+
                     b.HasOne("MT.Blog.Posts.Domain.Entities.Author", "Creator")
                         .WithMany("Posts")
                         .HasForeignKey("CreatedBy")
@@ -300,6 +376,8 @@ namespace MT.Blog.Posts.Infrastructure.Migrations
                         .HasForeignKey("ParentPostId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .HasConstraintName("fk_posts_posts_parent_post_id");
+
+                    b.Navigation("Category");
 
                     b.Navigation("Creator");
 
@@ -342,6 +420,11 @@ namespace MT.Blog.Posts.Infrastructure.Migrations
                     b.Navigation("Posts");
 
                     b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("MT.Blog.Posts.Domain.Entities.Category", b =>
+                {
+                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("MT.Blog.Posts.Domain.Entities.Comment", b =>

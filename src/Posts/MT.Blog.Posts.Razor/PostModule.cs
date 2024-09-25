@@ -25,6 +25,7 @@ public static class PostModule
 
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IAuthorRepository, AuthorRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
         
         services.RegisterPostApplication();
 

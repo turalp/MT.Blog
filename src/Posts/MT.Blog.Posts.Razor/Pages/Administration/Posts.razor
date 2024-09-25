@@ -1,0 +1,67 @@
+﻿@page "/admin/posts"
+
+@using MT.Blog.Common.Functional
+@using MT.Blog.Common.Functional.Optional
+@using MT.Blog.Posts.Application.Categories.Queries
+@using MT.Blog.Posts.Application.Posts.Queries
+@using MT.Blog.Posts.Domain.Entities
+@using MT.Blog.Posts.Domain.Primaries
+@using MT.Blog.Common.Extensions
+
+@inject ISender _sender
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-5">
+    <MudDataGrid T="Post" Items="@ActivePosts" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual"
+        Class="mt-1">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Məqalələr idarə et</MudText>
+            <MudSpacer />
+            <MudTextField T="string" Placeholder="Axtar" Adornment="Adornment.Start" 
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="x => x.Title" Title="Başlıq"></PropertyColumn>
+            <PropertyColumn Property="x => x.Description" Title="Məqalə"></PropertyColumn>
+            <PropertyColumn Property="x => x.ParentPostId" Title="Baş məqalə">
+                <EditTemplate>
+                    <MudSelect @bind-Value="context.Item.ParentPostId">
+                        @foreach(var post in ActivePosts)
+                        {
+                            <MudSelectItem Value="@post.PostId">@post.Title</MudSelectItem>
+                        }
+                    </MudSelect>
+                </EditTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="x => x.CategoryId" Title="Kateqoriya">
+                <EditTemplate>
+                    <MudSelect @bind-Value="context.Item.CategoryId">
+                        @foreach(var category in Categories)
+                        {
+                            <MudSelectItem Value="@category.CategoryId">@category.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </EditTemplate>
+            </PropertyColumn>
+        </Columns>
+    </MudDataGrid>
+</MudContainer>
+
+    
+@code {
+    private Post[] ActivePosts { get; set; } = Array.Empty<Post>();
+
+    private Category[] Categories { get; set; } = Array.Empty<Category>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var postsQuery = GetPostsQuery.Create(None.Of<PostId>());
+        var postsQueryResult = await _sender.Send<Result<IEnumerable<Post>>>(postsQuery);
+        
+        ActivePosts = postsQueryResult.IsSuccess ? postsQueryResult.Value.Map(p => p.ToArray()).Reduce([]) : [];
+
+        var categoriesQuery = GetCategoriesQuery.Create();
+        var categoriesQueryResult = await _sender.Send<Result<IEnumerable<Category>>>(categoriesQuery);
+
+        Categories = categoriesQueryResult.IsSuccess ? categoriesQueryResult.Value.Map(p => p.ToArray()).Reduce([]) : [];
+    }
+}

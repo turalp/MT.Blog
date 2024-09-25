@@ -41,36 +41,29 @@ namespace MT.Blog.Posts.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "posts",
+                name: "category",
                 schema: "posts",
                 columns: table => new
                 {
-                    post_id = table.Column<int>(type: "int", nullable: false)
+                    category_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    title = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
-                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    parent_post_id = table.Column<int>(type: "int", nullable: true),
+                    name = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: false),
+                    icon_url = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: false),
                     created_by = table.Column<int>(type: "int", nullable: false),
                     updated_by = table.Column<int>(type: "int", nullable: true),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    updated_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    creator_author_id = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_posts", x => x.post_id);
+                    table.PrimaryKey("pk_category", x => x.category_id);
                     table.ForeignKey(
-                        name: "fk_posts_authors_created_by",
-                        column: x => x.created_by,
+                        name: "fk_category_authors_creator_author_id",
+                        column: x => x.creator_author_id,
                         principalSchema: "posts",
                         principalTable: "authors",
-                        principalColumn: "author_id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_posts_posts_parent_post_id",
-                        column: x => x.parent_post_id,
-                        principalSchema: "posts",
-                        principalTable: "posts",
-                        principalColumn: "post_id");
+                        principalColumn: "author_id");
                 });
 
             migrationBuilder.CreateTable(
@@ -96,6 +89,47 @@ namespace MT.Blog.Posts.Infrastructure.Migrations
                         principalTable: "authors",
                         principalColumn: "author_id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "posts",
+                schema: "posts",
+                columns: table => new
+                {
+                    post_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    title = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
+                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    parent_post_id = table.Column<int>(type: "int", nullable: true),
+                    category_id = table.Column<int>(type: "int", nullable: false),
+                    created_by = table.Column<int>(type: "int", nullable: false),
+                    updated_by = table.Column<int>(type: "int", nullable: true),
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_posts", x => x.post_id);
+                    table.ForeignKey(
+                        name: "fk_posts_authors_created_by",
+                        column: x => x.created_by,
+                        principalSchema: "posts",
+                        principalTable: "authors",
+                        principalColumn: "author_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_posts_category_category_id",
+                        column: x => x.category_id,
+                        principalSchema: "posts",
+                        principalTable: "category",
+                        principalColumn: "category_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_posts_posts_parent_post_id",
+                        column: x => x.parent_post_id,
+                        principalSchema: "posts",
+                        principalTable: "posts",
+                        principalColumn: "post_id");
                 });
 
             migrationBuilder.CreateTable(
@@ -171,6 +205,12 @@ namespace MT.Blog.Posts.Infrastructure.Migrations
                 column: "creator_author_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_category_creator_author_id",
+                schema: "posts",
+                table: "category",
+                column: "creator_author_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_comments_created_by",
                 schema: "posts",
                 table: "comments",
@@ -193,6 +233,12 @@ namespace MT.Blog.Posts.Infrastructure.Migrations
                 schema: "posts",
                 table: "post_tag",
                 column: "tags_tag_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_posts_category_id",
+                schema: "posts",
+                table: "posts",
+                column: "category_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_posts_created_by",
@@ -230,6 +276,10 @@ namespace MT.Blog.Posts.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "tags",
+                schema: "posts");
+
+            migrationBuilder.DropTable(
+                name: "category",
                 schema: "posts");
 
             migrationBuilder.DropTable(
