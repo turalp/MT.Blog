@@ -10,14 +10,9 @@ using MT.Blog.Posts.Infrastructure.Repositories.Contracts;
 
 namespace MT.Blog.Posts.Infrastructure.Repositories.Concretes;
 
-public sealed class CategoryRepository : ICategoryRepository
+public sealed class CategoryRepository(PostDbContext dbContext) : ICategoryRepository
 {
-    private readonly PostDbContext _dbContext;
-
-    public CategoryRepository(PostDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    private readonly PostDbContext _dbContext = dbContext;
 
     public Task<Category> CreateAsync(Category category, CancellationToken cancellationToken = default)
     {
