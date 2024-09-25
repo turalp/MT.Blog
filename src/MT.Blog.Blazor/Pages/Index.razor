@@ -1,16 +1,83 @@
 ﻿@page "/"
 
+@using MT.Blog.Posts.Domain.Entities
+
 <MudPaper Height="100%" Width="100%" Class="mt-4" Outlined="false" Elevation="0">
     <MudContainer MaxWidth="MaxWidth.Large">
+        <!-- TODO: Remove MudGrid and MudDivider once categories are all set. -->
+        <MudGrid Spacing="1">
+            <MudItem sm="12">
+                <h1>Kateqoriyalar</h1>
+            </MudItem>
+        </MudGrid>
+        <MudDivider DividerType="DividerType.FullWidth"></MudDivider>
+        @if (Categories.Length != 0)
+        {
+            @foreach (var category in Categories)
+            {
+                <MudGrid Spacing="1">
+                    <MudItem lg="2" md="4" sm="6">
+                        <MudCard>
+                            <MudCardMedia Image="@category.IconUrl" Height="128"></MudCardMedia>
+                            <MudCardContent>
+                                <MudText Typo="Typo.h5">@category.Name</MudText>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                </MudGrid>
+            }
+        }
+        else
+        {
+            <MudPaper 
+                Square="false" 
+                Class="align-content-center mt-1 mb-1" 
+                Elevation="0" 
+                Height="25vh" 
+                Style="@($"background:{Colors.Gray.Lighten3};")">
+                <MudGrid Spacing="1" Justify="Justify.Center">
+                    <MudItem>
+                        <MudIcon Icon="@Icons.Material.Filled.Announcement"></MudIcon>
+                    </MudItem>
+                    <MudItem>
+                        <MudText Typo="Typo.body1" Class="align-content-center"> Kateqoriyalar yüklənməyib. Müvəqqəti narahlığınıza görə üzr istəyirik.</MudText>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        }
         <MudGrid Spacing="1">
             <MudItem sm="12">
                 <h1>Yeni məqalələr</h1>
             </MudItem>
         </MudGrid>
         <MudDivider DividerType="DividerType.FullWidth"></MudDivider>
+        @if (Posts.Length != 0)
+        {
+            <!-- TODO: Implement a layout for newly created posts. -->
+        }
+        else 
+        {
+            <MudPaper 
+                Square="false" 
+                Class="align-content-center mt-1 mb-1" 
+                Elevation="0" 
+                Height="25vh" 
+                Style="@($"background:{Colors.Gray.Lighten3};")">
+                <MudGrid Spacing="1" Justify="Justify.Center">
+                    <MudItem>
+                        <MudIcon Icon="@Icons.Material.Filled.Announcement"></MudIcon>
+                    </MudItem>
+                    <MudItem>
+                        <MudText Typo="Typo.body1" Class="align-content-center"> Yeni xəbərlər yoxdur. Müvəqqəti narahlığınıza görə üzr istəyirik.</MudText>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        }
     </MudContainer>
 </MudPaper>
 
 @code {
+    private Category[] Categories { get; set; } = [];
 
+    private Post[] Posts { get; set; } = [];
 }

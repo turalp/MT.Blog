@@ -27,6 +27,8 @@
     content: "An error has occurred."
 }
 
+/* Body styles */
+
 .page-layout {
     display: flex;
     flex-direction: column;
@@ -36,6 +38,12 @@
 .content {
     flex: 1 0 auto;
 }
+
+.text-align-center {
+    text-align: center;
+}
+
+/* Footer styles */
 
 .footer {
     flex-shrink: 0;

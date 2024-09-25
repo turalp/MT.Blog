@@ -3,6 +3,9 @@ using MT.Blog.Posts.Domain.Primaries;
 
 namespace MT.Blog.Posts.Domain.Entities.Base;
 
+/// <summary>
+/// Abstract class to define entities that contain audit properties.
+/// </summary>
 public abstract class Auditable : IEntity
 {
     public AuthorId CreatedBy { get; init; }
