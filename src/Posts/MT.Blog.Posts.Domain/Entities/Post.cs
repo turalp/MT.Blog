@@ -10,6 +10,7 @@ public sealed class Post : Auditable
     /// Private constructor to create an instance of object. Cannot be used outside of the class.
     /// </summary>
     /// <param name="title">Specify non-nullable, non-empty title of post.</param>
+    /// <param name="key">Specify non-nullable, non-empty key value for post.</param>
     /// <param name="description">Specify non-nullable, non-empty description of post.</param>
     /// <param name="categoryId">Specify positive category id of post.</param>
     /// <param name="parentPostId">Specify parent of post if required.</param>
@@ -19,6 +20,7 @@ public sealed class Post : Auditable
     [SetsRequiredMembers]
     private Post(
         string title, 
+        string key,
         string description, 
         CategoryId categoryId,
         PostId? parentPostId = null, 
@@ -27,6 +29,7 @@ public sealed class Post : Auditable
         ICollection<Post>? subPosts = null)
     {
         Title = !string.IsNullOrEmpty(title) ? title : throw new ArgumentException("Property cannot be null or empty", nameof(title));
+        Key = key;
         Description = !string.IsNullOrEmpty(description) ? description : throw new ArgumentException("Property cannot be null or empty", nameof(description));
         CategoryId = categoryId;
         ParentPostId = parentPostId;
@@ -39,17 +42,20 @@ public sealed class Post : Auditable
     /// Constructor in order to work with Entity Framework Core.
     /// </summary>
     /// <param name="title">Specify non-nullable, non-empty title of post.</param>
+    /// <param name="key">Specify non-nullable, non-empty key value for post.</param>
     /// <param name="description">Specify non-nullable, non-empty description of post.</param>
     /// <param name="categoryId">Specify positive category id of post.</param>
     /// <param name="parentPostId">Specify parent of post if required.</param>
     [SetsRequiredMembers]
     private Post(
         string title, 
+        string key,
         string description, 
         CategoryId categoryId,
         PostId? parentPostId = null)
     {
         Title = !string.IsNullOrEmpty(title) ? title : throw new ArgumentException("Property cannot be null or empty", nameof(title));
+        Key = !string.IsNullOrEmpty(title) ? key : throw new ArgumentException("Property cannot be null or empty", nameof(key));
         Description = !string.IsNullOrEmpty(description) ? description : throw new ArgumentException("Property cannot be null or empty", nameof(description));
         CategoryId = categoryId;
         ParentPostId = parentPostId;
@@ -61,6 +67,8 @@ public sealed class Post : Auditable
     public PostId PostId { get; init; }
 
     public required string Title { get; init; }
+
+    public required string Key { get; init; }
 
     public required string Description { get; init; }
 
@@ -82,12 +90,13 @@ public sealed class Post : Auditable
     /// Property that creates an empty post instance. 
     /// Do <b>NOT</b> use unless there are no other ways.
     /// </summary>
-    public static Post Empty => Create(string.Empty, string.Empty, CategoryId.Empty);
+    public static Post Empty => Create(string.Empty, string.Empty, string.Empty, CategoryId.Empty);
 
     /// <summary>
     /// Static method that creates an instance of post entity.
     /// </summary>
     /// <param name="title">Specify non-nullable, non-empty title of post.</param>
+    /// <param name="key">Specify non-nullable, non-empty key value for post.</param>
     /// <param name="description">Specify non-nullable, non-empty description of post.</param>
     /// <param name="categoryId">Specify positive category id of post.</param>
     /// <param name="parentPostId">Specify parent of post if required.</param>
@@ -97,11 +106,12 @@ public sealed class Post : Auditable
     /// <returns>Returns a new instance of post entity.</returns>
     public static Post Create(
         string title, 
+        string key,
         string description, 
         CategoryId categoryId,
         PostId? parentPostId = null, 
         ICollection<Tag>? tags = null,
         ICollection<Comment>? comments = null,
         ICollection<Post>? subPosts = null) => 
-            new(title, description, categoryId, parentPostId, tags, comments, subPosts);
+            new(title, key, description, categoryId, parentPostId, tags, comments, subPosts);
 }

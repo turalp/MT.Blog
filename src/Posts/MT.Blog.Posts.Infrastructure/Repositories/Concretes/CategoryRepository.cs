@@ -36,6 +36,7 @@ public sealed class CategoryRepository(PostDbContext dbContext) : ICategoryRepos
 
     public async Task<IEnumerable<Category>> ListAsync(ISpecification<Category> specification, CancellationToken cancellationToken = default)
         => await _dbContext.ApplySpecification(specification).ToArrayAsync(cancellationToken);
+    
     public Task<Result<Category>> UpdateAsync(Category category, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
