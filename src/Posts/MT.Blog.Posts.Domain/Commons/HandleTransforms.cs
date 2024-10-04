@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.Text;
+using static MT.Blog.Posts.Domain.Constants.AlphabetConstants;
 
 namespace MT.Blog.Posts.Domain.Commons;
 
@@ -41,6 +43,30 @@ public static class HandleTransforms
             {
                 yield return s[..colon];
                 yield break;
+            }
+
+            yield return s;
+        }
+    }
+
+    public static TransformHandle ReplaceAzerbaijaniLetters =>
+        handle => new(ReplaceNonStandardLetters(handle.Components).ToArray());
+
+    private static IEnumerable<string> ReplaceNonStandardLetters(IEnumerable<string> strings)
+    {
+        var builder = new StringBuilder();
+        foreach (var s in strings)
+        {
+            builder.Clear();
+
+            if (s.Any(SlugLetterReplacement.ContainsKey))
+            {
+                foreach (var c in s)
+                {
+                    builder.Append(SlugLetterReplacement.TryGetValue(c, out var result) ? result : c);
+                }
+
+                yield return builder.ToString();
             }
 
             yield return s;

@@ -1,4 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using MT.Blog.Posts.Domain.Commons;
 using MT.Blog.Posts.Domain.Entities.Base;
 using MT.Blog.Posts.Domain.Primaries;
 
@@ -115,3 +117,5 @@ public sealed class Post : Auditable
         ICollection<Post>? subPosts = null) => 
             new(title, key, description, categoryId, parentPostId, tags, comments, subPosts);
 }
+
+public delegate Slug PostTitleToSlug(CultureInfo culture, string title);

@@ -21,6 +21,11 @@ public sealed class PostConfiguration : AuditableConfiguration<Post>, IEntityTyp
             .IsRequired()
             .HasMaxLength(512)
             .HasColumnType("nvarchar");
+
+        builder.Property(p => p.Key)
+            .IsRequired()
+            .HasMaxLength(512)
+            .HasColumnType("nvarchar");
         
         builder.HasMany(p => p.Tags)
             .WithMany(p => p.Posts);
