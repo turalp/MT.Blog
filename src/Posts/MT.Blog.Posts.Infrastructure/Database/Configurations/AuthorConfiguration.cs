@@ -37,6 +37,8 @@ public sealed class AuthorConfiguration : AuditableConfiguration<Author>, IEntit
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasData(DataSeedFunctions.Authors);
+
         base.Configure(builder);
     }
 }

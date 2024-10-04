@@ -7,4 +7,8 @@ public readonly record struct CategoryId(int Value) : IStronglyTypedId<CategoryI
     public static CategoryId Empty => new(int.MinValue);
 
     public static CategoryId Create(int value) => new(value);
+
+    public static implicit operator int(CategoryId categoryId) => categoryId.Value;
+
+    public static implicit operator CategoryId(int value) => Create(value);
 }

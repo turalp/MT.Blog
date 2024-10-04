@@ -22,12 +22,10 @@ public class AuditableConfiguration<T> : IEntityTypeConfiguration<T> where T : A
 
         builder
             .Property(p => p.CreatedAt)
-            .ValueGeneratedOnAdd()
             .IsRequired();
 
         builder
             .Property(p => p.UpdatedBy)
-            .ValueGeneratedOnUpdate()
             .IsRequired(false);
     }
 }

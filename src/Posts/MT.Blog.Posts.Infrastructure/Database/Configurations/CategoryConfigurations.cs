@@ -33,6 +33,8 @@ public sealed class CategoryConfigurations : AuditableConfiguration<Category>, I
             .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasData(DataSeedFunctions.Categories);
+
         base.Configure(builder);
     }
 }

@@ -33,6 +33,20 @@ public sealed class Author : Auditable
         Tags = [];
     }
 
+    [SetsRequiredMembers]
+    private Author(
+        AuthorId authorId,
+        string firstName, 
+        string lastName)
+    {
+        AuthorId = authorId;
+        FirstName = firstName;
+        LastName = lastName;
+        Posts = [];
+        Comments = [];
+        Tags = [];
+    }
+
     public AuthorId AuthorId { get; init; }
 
     public required string FirstName { get; init; }
@@ -51,4 +65,12 @@ public sealed class Author : Auditable
         ICollection<Post>? posts = null,
         ICollection<Comment>? comments = null,
         ICollection<Tag>? tags = null) => new(firstName, lastName, posts, comments, tags);
+
+    public static Author Create(
+        AuthorId authorId,
+        string firstName, 
+        string lastName) => new(authorId, firstName, lastName) {
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = AuthorId.Create(0)
+        };
 }

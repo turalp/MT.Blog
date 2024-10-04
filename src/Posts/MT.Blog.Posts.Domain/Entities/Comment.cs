@@ -9,9 +9,9 @@ public sealed class Comment : Auditable
     [SetsRequiredMembers]
     private Comment(string body, CommentId? parentCommentId, PostId postId, Post? post = null, ICollection<Comment>? subComments = null) 
     {
-        Body = body;
-        PostId = postId;
-        ParentId = parentCommentId;
+        Body = !string.IsNullOrEmpty(body) ? body : throw new ArgumentException("Property cannot be null or empty", nameof(body));
+        PostId = postId.Value > 0 ? postId : throw new ArgumentException("Primary key must be greater than zero", nameof(postId));
+        ParentId = !parentCommentId.HasValue || parentCommentId?.Value > 0 ? parentCommentId : throw new ArgumentException("Primary key must be greater than zero", nameof(parentCommentId));
         SubComments = subComments ?? [];
         Post = post;
     }
@@ -19,8 +19,18 @@ public sealed class Comment : Auditable
     [SetsRequiredMembers]
     private Comment(string body, PostId postId) 
     {
-        Body = body;
-        PostId = postId;
+        Body = !string.IsNullOrEmpty(body) ? body : throw new ArgumentException("Property cannot be null or empty", nameof(body));
+        PostId = postId.Value > 0 ? postId : throw new ArgumentException("Primary key must be greater than zero", nameof(postId));
+        SubComments = [];
+        Post = Post.Empty;
+    }
+
+    [SetsRequiredMembers]
+    private Comment(CommentId commentId, string body, PostId postId) 
+    {
+        CommentId = commentId.Value > 0 ? commentId : throw new ArgumentException("Primary key must be greater than zero", nameof(commentId));
+        Body = !string.IsNullOrEmpty(body) ? body : throw new ArgumentException("Property cannot be null or empty", nameof(body));
+        PostId = postId.Value > 0 ? postId : throw new ArgumentException("Primary key must be greater than zero", nameof(postId));
         SubComments = [];
         Post = Post.Empty;
     }
@@ -41,4 +51,7 @@ public sealed class Comment : Auditable
 
     public static Comment Create(string body, PostId postId, CommentId? parentCommentId, Post? post = null, ICollection<Comment>? subComments = null) => 
         new(body, parentCommentId, postId, post, subComments);
+
+    public static Comment Create(CommentId commentId, string body, PostId postId) => 
+        new(commentId, body, postId);
 }

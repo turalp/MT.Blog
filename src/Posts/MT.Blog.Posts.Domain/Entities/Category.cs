@@ -21,6 +21,24 @@ public sealed class Category : Auditable
     }
 
     /// <summary>
+    /// Constructor in order to seed data into database.
+    /// </summary>
+    /// <param name="categoryId">Specify positive primary key for a category.</param>
+    /// <param name="name">Specify non-nullable, non-empty name for a category.</param>
+    /// <param name="iconUrl">Specify non-nullable, non-empty URL to icon for a category.</param>
+    /// <exception cref="ArgumentException">Throws when <paramref name="name"/> or <paramref name="iconUrl"/> is null or emtpy</exception>
+    [SetsRequiredMembers]
+    private Category(CategoryId categoryId, string name, string iconUrl, DateTime createdAt, AuthorId createdBy)
+    {
+        CategoryId = categoryId.Value > 0 ? categoryId : throw new ArgumentException("Primary key cannot be less than zero", nameof(categoryId));
+        Name = !string.IsNullOrEmpty(name) ? name : throw new ArgumentException("Property cannot be null or empty", nameof(name));
+        IconUrl = !string.IsNullOrEmpty(iconUrl) ? iconUrl : throw new ArgumentException("Property cannot be null or empty", nameof(iconUrl));
+        CreatedAt = createdAt;
+        CreatedBy = createdBy;
+        Posts = [];
+    }
+
+    /// <summary>
     /// Private constructor to create an instance of object. Cannot be used outside of the class.
     /// </summary>
     /// <param name="name">Specify non-nullable, non-empty name for a category.</param>
@@ -51,4 +69,14 @@ public sealed class Category : Auditable
     /// <param name="posts">Specify collection of posts that category is associated with.</param>
     public static Category Create(string name, string iconUrl, ICollection<Post>? posts = null) 
         => new(name, iconUrl, posts);
+
+    /// <summary>
+    /// Static method that creates an instance of category entity with specified primary key.
+    /// </summary>
+    /// <param name="categoryId">Specify positive primary key for a category.</param>
+    /// <param name="name">Specify non-nullable, non-empty name for a category.</param>
+    /// <param name="iconUrl">Specify non-nullable, non-empty URL to icon for a category.</param>
+    /// <param name="posts">Specify collection of posts that category is associated with.</param>
+    public static Category Create(CategoryId categoryId, string name, string iconUrl) 
+        => new(categoryId, name, iconUrl, DateTime.UtcNow, AuthorId.Create(1));
 }

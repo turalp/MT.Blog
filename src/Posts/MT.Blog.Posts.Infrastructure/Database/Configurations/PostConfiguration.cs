@@ -25,7 +25,7 @@ public sealed class PostConfiguration : AuditableConfiguration<Post>, IEntityTyp
         builder.Property(p => p.Key)
             .IsRequired()
             .HasMaxLength(512)
-            .HasColumnType("nvarchar");
+            .HasColumnType("varchar");
         
         builder.HasMany(p => p.Tags)
             .WithMany(p => p.Posts);
@@ -47,6 +47,8 @@ public sealed class PostConfiguration : AuditableConfiguration<Post>, IEntityTyp
             .IsRequired()
             .HasForeignKey(p => p.CreatedBy)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasData(DataSeedFunctions.Posts);
 
         base.Configure(builder);
     }

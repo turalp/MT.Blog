@@ -30,9 +30,9 @@ public sealed class Post : Auditable
         ICollection<Comment>? comments = null,
         ICollection<Post>? subPosts = null)
     {
-        Title = !string.IsNullOrEmpty(title) ? title : throw new ArgumentException("Property cannot be null or empty", nameof(title));
+        Title = title;
         Key = key;
-        Description = !string.IsNullOrEmpty(description) ? description : throw new ArgumentException("Property cannot be null or empty", nameof(description));
+        Description = description;
         CategoryId = categoryId;
         ParentPostId = parentPostId;
         Tags = tags ?? [];
@@ -56,13 +56,45 @@ public sealed class Post : Auditable
         CategoryId categoryId,
         PostId? parentPostId = null)
     {
-        Title = !string.IsNullOrEmpty(title) ? title : throw new ArgumentException("Property cannot be null or empty", nameof(title));
-        Key = !string.IsNullOrEmpty(title) ? key : throw new ArgumentException("Property cannot be null or empty", nameof(key));
-        Description = !string.IsNullOrEmpty(description) ? description : throw new ArgumentException("Property cannot be null or empty", nameof(description));
+        Title = title;
+        Key = key;
+        Description = description;
         CategoryId = categoryId;
         ParentPostId = parentPostId;
         Tags = [];
         Comments = [];
+        SubPosts = [];
+    }
+
+    /// <summary>
+    /// Private constructor to create an instance of object for data seeding. Cannot be used outside of the class.
+    /// </summary>
+    /// <param name="title">Specify non-nullable, non-empty title of post.</param>
+    /// <param name="key">Specify non-nullable, non-empty key value for post.</param>
+    /// <param name="description">Specify non-nullable, non-empty description of post.</param>
+    /// <param name="categoryId">Specify positive category id of post.</param>
+    /// <param name="parentPostId">Specify parent of post if required.</param>
+    /// <param name="tags">Collection of tags, if required.</param>
+    /// <param name="comments">Collection of related comments, if required.</param>
+    [SetsRequiredMembers]
+    private Post(
+        PostId postId,
+        string title, 
+        string key,
+        string description, 
+        CategoryId categoryId,
+        PostId? parentPostId = null, 
+        ICollection<Tag>? tags = null,
+        ICollection<Comment>? comments = null)
+    {
+        PostId = postId.Value > 0 ? postId : throw new ArgumentException("Primary key should be greater than zero", nameof(postId));
+        Title = title;
+        Key = key;
+        Description = description;
+        CategoryId = categoryId;
+        ParentPostId = parentPostId;
+        Tags = tags ?? [];
+        Comments = comments ?? [];
         SubPosts = [];
     }
 
@@ -116,6 +148,34 @@ public sealed class Post : Auditable
         ICollection<Comment>? comments = null,
         ICollection<Post>? subPosts = null) => 
             new(title, key, description, categoryId, parentPostId, tags, comments, subPosts);
+
+    /// <summary>
+    /// Static method that creates an instance of post entity.
+    /// </summary>
+    /// <param name="postId">Specify positive primary key for post.</param>
+    /// <param name="title">Specify non-nullable, non-empty title of post.</param>
+    /// <param name="key">Specify non-nullable, non-empty key value for post.</param>
+    /// <param name="description">Specify non-nullable, non-empty description of post.</param>
+    /// <param name="categoryId">Specify positive category id of post.</param>
+    /// <param name="parentPostId">Specify parent of post if required.</param>
+    /// <param name="tags">Collection of tags, if required.</param>
+    /// <param name="comments">Collection of related comments, if required.</param>
+    /// <returns>Returns a new instance of post entity.</returns>
+    /// <remarks>Utilize this method only for <b>data seeding.</b></remarks>
+    public static Post Create(
+        PostId postId,
+        string title, 
+        string key,
+        string description, 
+        CategoryId categoryId,
+        AuthorId authorId,
+        PostId? parentPostId = null, 
+        ICollection<Tag>? tags = null,
+        ICollection<Comment>? comments = null) => 
+            new(postId, title, key, description, categoryId, parentPostId, tags, comments) {
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = authorId 
+            };
 }
 
 public delegate Slug PostTitleToSlug(CultureInfo culture, string title);
