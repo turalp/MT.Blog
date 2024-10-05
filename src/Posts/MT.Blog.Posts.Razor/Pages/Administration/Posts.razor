@@ -11,7 +11,7 @@
 @inject ISender _sender
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5">
-    <MudDataGrid T="Post" Items="@ActivePosts" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual"
+    <MudDataGrid T="Post" Items="@ActivePosts" ReadOnly="false" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual"
         Class="mt-1">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Məqalələr idarə et</MudText>
@@ -21,8 +21,15 @@
         </ToolBarContent>
         <Columns>
             <PropertyColumn Property="x => x.Title" Title="Başlıq"></PropertyColumn>
-            <PropertyColumn Property="x => x.Description" Title="Məqalə"></PropertyColumn>
+            <PropertyColumn Property="x => x.Description" Title="Məqalə">
+                <CellTemplate>
+                    <MudText Style="overflow-wrap:break-word; text-overflow: ellipsis; overflow: hidden; max-height: 50px;">@context.Item.Description</MudText>
+                </CellTemplate>
+            </PropertyColumn>
             <PropertyColumn Property="x => x.ParentPostId" Title="Baş məqalə">
+                <CellTemplate>
+                    <MudText>@context.Item.ParentPost?.Title</MudText>
+                </CellTemplate>
                 <EditTemplate>
                     <MudSelect @bind-Value="context.Item.ParentPostId">
                         @foreach(var post in ActivePosts)
@@ -33,6 +40,9 @@
                 </EditTemplate>
             </PropertyColumn>
             <PropertyColumn Property="x => x.CategoryId" Title="Kateqoriya">
+                <CellTemplate>
+                    <MudText>@context.Item.Category?.Name</MudText>
+                </CellTemplate>
                 <EditTemplate>
                     <MudSelect @bind-Value="context.Item.CategoryId">
                         @foreach(var category in Categories)
@@ -42,6 +52,11 @@
                     </MudSelect>
                 </EditTemplate>
             </PropertyColumn>
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync" />
+                </CellTemplate>
+            </TemplateColumn>
         </Columns>
     </MudDataGrid>
 </MudContainer>
